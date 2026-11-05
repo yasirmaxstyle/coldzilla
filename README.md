@@ -18,7 +18,7 @@ Pharmacies don't stock 50-ton decongestants, so Coldzilla discovered only one wa
 
 Whenever he freezes completely solid (or whenever a sympathetic human clicks on him to tickle his snout), a heroic reflex kicks in:
 1. **The Big Sniffle (`inhaling`)**: He leans way back, swells his chest like a scaly balloon, opens his jaws wide, and squints in anticipation—*"Ahhhh... AHHHHH..."*
-2. **The Atomic Achoo (`sneezing`)**: ***"CHOOOOO!"*** He snaps violently forward, squeezing his eyes shut as a compact burst of 198 fireball particles rockets out of his nostrils and mouth. The sheer exothermic combustion of his sneeze instantly rockets his body temperature back up to **37.0°C (100% Warmth)**!
+2. **The Atomic Achoo (`sneezing`)**: ***"CHOOOOO!"*** He snaps violently forward and his feet kick comically high into the air from the sheer recoil, while a compact burst of fireball particles rockets out of his snout. The exothermic combustion instantly warms his body temperature back up to **37.0°C (100% Warmth)**!
 3. **The Post-Sneeze Sniffle (`cooling`)**: Smoke puffs lazily drift up from his snout as he settles back down, briefly toasty... until the chilly breeze starts freezing him all over again.
 
 Moral of the story: *Never fight Mothra in the rain without a scarf.*
@@ -37,8 +37,13 @@ The sneeze sequence is a three-stage state machine (`inhaling` $\rightarrow$ `sn
   $$\theta_{\text{torso}, x} = -0.05s, \quad \text{Scale}_{\text{torso}}(y, z) = (1 + 0.015s,\; 1 + 0.02s)$$
   $$\theta_{\text{upperJaw}, x} = -0.05s, \quad \theta_{\text{lowerJaw}, x} = 0.14s$$
 
-* **Sneeze Impact & Inverse Eye-Squint Factor (`sneeze`)**:
-  Upon sneezing, the body snaps forward ($\theta_{\text{torso}, x} = +0.04s$) while the torso compresses vertically ($\text{Scale}_{\text{torso}, y} = 1 - 0.02s$). To make stronger sneezes squeeze Coldzilla's eyes shut tighter, an **inverse normalized sneeze effect** is computed:
+* **Sneeze Impact, Feet Recoil Elevation & Inverse Eye-Squint Factor (`sneeze`)**:
+  Upon sneezing, the body snaps forward ($\theta_{\text{torso}, x} = +0.04s$) while the torso compresses vertically ($\text{Scale}_{\text{torso}, y} = 1 - 0.02s$). To simulate the sheer explosive recoil of the sneeze, the feet and seated thighs kick high into the air using an overshooting curve (`back.out(2.2)`):
+  $$y_{\text{feet}} = 26 + 5.2s, \quad z_{\text{feet}} = 68 + 3.0s, \quad \theta_{\text{feet}, x} = -0.55 - 0.15s$$
+  $$y_{\text{thigh}} = 34 + 1.6s, \quad \theta_{\text{thigh}, x} = 0.4 - 0.09s$$
+  At default sneeze power $s = 5.5$, the feet rise from $y=26$ to $y \approx 54.6$ (over double their resting elevation!), tilting the toes skyward before dropping back down onto the platform during recovery (`backToNormal`).
+
+  To make stronger sneezes squeeze Coldzilla's eyes shut tighter, an **inverse normalized sneeze effect** is computed:
   $$E_{\text{sneeze}} = 1 - \frac{s}{S_{\max}}, \quad \text{Scale}_{\text{eye}, y} = 0.2 \cdot E_{\text{sneeze}}$$
   As $s \to S_{\max}$, $E_{\text{sneeze}} \to 0$, clamping the eyelids tightly closed on impact.
 
