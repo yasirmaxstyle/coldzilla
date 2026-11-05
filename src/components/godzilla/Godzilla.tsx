@@ -34,6 +34,10 @@ export const Coldzilla: React.FC<ColdzillaProps> = ({
     const rightIrisRef = useRef<THREE.Mesh>(null);
     const leftArmRef = useRef<THREE.Group>(null);
     const rightArmRef = useRef<THREE.Group>(null);
+    const leftThighRef = useRef<THREE.Mesh>(null);
+    const rightThighRef = useRef<THREE.Mesh>(null);
+    const leftFootRef = useRef<THREE.Mesh>(null);
+    const rightFootRef = useRef<THREE.Mesh>(null);
     const tailRef = useRef<THREE.Group>(null);
 
     // Sneeze & Temperature State Refs
@@ -146,6 +150,40 @@ export const Coldzilla: React.FC<ColdzillaProps> = ({
         // Pull arms and tail back
         gsap.to(leftArmRef.current!.rotation, { duration: speed, x: 0.4 - s * 0.12, z: 0.25 + s * 0.05, ease: 'back.out(1.7)' });
         gsap.to(rightArmRef.current!.rotation, { duration: speed, x: 0.4 - s * 0.12, z: -0.25 - s * 0.05, ease: 'back.out(1.7)' });
+
+        // Feet lift slightly and toes curl up in anticipation during inhale
+        if (leftFootRef.current && rightFootRef.current) {
+            gsap.to(leftFootRef.current.position, {
+                duration: speed,
+                y: 26 + s * 0.8,
+                z: 68 - s * 0.4,
+                ease: 'back.out(1.4)',
+            });
+            gsap.to(rightFootRef.current.position, {
+                duration: speed,
+                y: 26 + s * 0.8,
+                z: 68 - s * 0.4,
+                ease: 'back.out(1.4)',
+            });
+            gsap.to(leftFootRef.current.rotation, {
+                duration: speed,
+                x: -0.55 - s * 0.05,
+                ease: 'back.out(1.4)',
+            });
+            gsap.to(rightFootRef.current.rotation, {
+                duration: speed,
+                x: -0.55 - s * 0.05,
+                ease: 'back.out(1.4)',
+            });
+        }
+        if (leftThighRef.current && rightThighRef.current) {
+            gsap.to([leftThighRef.current.rotation, rightThighRef.current.rotation], {
+                duration: speed,
+                x: 0.4 - s * 0.03,
+                ease: 'back.out(1.4)',
+            });
+        }
+
         gsap.to(tailRef.current!.rotation, {
             duration: speed,
             x: s * 0.04,
@@ -188,6 +226,54 @@ export const Coldzilla: React.FC<ColdzillaProps> = ({
         gsap.to(leftArmRef.current!.rotation, { duration: speed, x: 0.4 + s * 0.15, z: 0.25, ease: 'back.out(1.7)' });
         gsap.to(rightArmRef.current!.rotation, { duration: speed, x: 0.4 + s * 0.15, z: -0.25, ease: 'back.out(1.7)' });
 
+        // Sneeze recoil kicks feet high up into the air
+        const footLiftDuration = speed * 1.5;
+        if (leftFootRef.current && rightFootRef.current) {
+            gsap.to(leftFootRef.current.position, {
+                duration: footLiftDuration,
+                y: 26 + s * 5.2, // At s=5.5, lifts +28.6 to y=54.6!
+                z: 68 + s * 3.0, // Kicks forward into the air
+                ease: 'back.out(2.2)',
+            });
+            gsap.to(rightFootRef.current.position, {
+                duration: footLiftDuration,
+                y: 26 + s * 5.2,
+                z: 68 + s * 3.0,
+                ease: 'back.out(2.2)',
+            });
+            gsap.to(leftFootRef.current.rotation, {
+                duration: footLiftDuration,
+                x: -0.55 - s * 0.15, // Toes point up toward the sky
+                z: 0.1 + s * 0.035,  // Slight outward flare
+                ease: 'back.out(2.2)',
+            });
+            gsap.to(rightFootRef.current.rotation, {
+                duration: footLiftDuration,
+                x: -0.55 - s * 0.15,
+                z: -0.1 - s * 0.035, // Slight outward flare
+                ease: 'back.out(2.2)',
+            });
+        }
+
+        // Seated thighs rotate and lift to follow the kick
+        if (leftThighRef.current && rightThighRef.current) {
+            gsap.to(leftThighRef.current.position, {
+                duration: footLiftDuration,
+                y: 34 + s * 1.6,
+                ease: 'back.out(1.8)',
+            });
+            gsap.to(rightThighRef.current.position, {
+                duration: footLiftDuration,
+                y: 34 + s * 1.6,
+                ease: 'back.out(1.8)',
+            });
+            gsap.to([leftThighRef.current.rotation, rightThighRef.current.rotation], {
+                duration: footLiftDuration,
+                x: 0.4 - s * 0.09,
+                ease: 'back.out(1.8)',
+            });
+        }
+
         gsap.to(tailRef.current!.rotation, {
             duration: speed * 2.5,
             x: -s * 0.04,
@@ -208,6 +294,52 @@ export const Coldzilla: React.FC<ColdzillaProps> = ({
 
         gsap.to(leftArmRef.current!.rotation, { duration: speed, x: 0.4, z: 0.25, ease: 'back.inOut(1.7)' });
         gsap.to(rightArmRef.current!.rotation, { duration: speed, x: 0.4, z: -0.25, ease: 'back.inOut(1.7)' });
+
+        // Feet drop back down to rest on the ground
+        if (leftFootRef.current && rightFootRef.current) {
+            gsap.to(leftFootRef.current.position, {
+                duration: speed,
+                x: -26,
+                y: 26,
+                z: 68,
+                ease: 'back.out(1.4)',
+            });
+            gsap.to(rightFootRef.current.position, {
+                duration: speed,
+                x: 26,
+                y: 26,
+                z: 68,
+                ease: 'back.out(1.4)',
+            });
+            gsap.to(leftFootRef.current.rotation, {
+                duration: speed,
+                x: -0.55,
+                y: -0.15,
+                z: 0.1,
+                ease: 'power4.out',
+            });
+            gsap.to(rightFootRef.current.rotation, {
+                duration: speed,
+                x: -0.55,
+                y: 0.15,
+                z: -0.1,
+                ease: 'power4.out',
+            });
+        }
+
+        // Thighs return to seated rest
+        if (leftThighRef.current && rightThighRef.current) {
+            gsap.to([leftThighRef.current.position, rightThighRef.current.position], {
+                duration: speed,
+                y: 34,
+                ease: 'back.out(1.4)',
+            });
+            gsap.to([leftThighRef.current.rotation, rightThighRef.current.rotation], {
+                duration: speed,
+                x: 0.4,
+                ease: 'power4.out',
+            });
+        }
 
         gsap.to(tailRef.current!.rotation, {
             duration: speed,
@@ -665,16 +797,16 @@ export const Coldzilla: React.FC<ColdzillaProps> = ({
                 {/* ==================== LOWER BODY ==================== */}
                 <group ref={lowerBodyRef}>
                     {/* Seated Thighs */}
-                    < mesh position={[-42, 34, 12]} rotation={[0.4, 0, 0.3]} material={materials.skin} castShadow receiveShadow >
+                    <mesh ref={leftThighRef} position={[-42, 34, 12]} rotation={[0.4, 0, 0.3]} material={materials.skin} castShadow receiveShadow >
                         <boxGeometry args={[24, 52, 48]} />
                     </mesh>
-                    < mesh position={[42, 34, 12]} rotation={[0.4, 0, -0.3]} material={materials.skin} castShadow receiveShadow >
+                    <mesh ref={rightThighRef} position={[42, 34, 12]} rotation={[0.4, 0, -0.3]} material={materials.skin} castShadow receiveShadow >
                         <boxGeometry args={[24, 52, 48]} />
                     </mesh>
 
                     {/* Pointed Feet */}
-                    <mesh position={[-26, 26, 68]} rotation={[-0.55, -0.15, 0.1]} scale={[0.8, 1.35, 0.7]} geometry={pyramidGeo} material={materials.skin} castShadow receiveShadow />
-                    <mesh position={[26, 26, 68]} rotation={[-0.55, 0.15, -0.1]} scale={[0.8, 1.35, 0.7]} geometry={pyramidGeo} material={materials.skin} castShadow receiveShadow />
+                    <mesh ref={leftFootRef} position={[-26, 26, 68]} rotation={[-0.55, -0.15, 0.1]} scale={[0.8, 1.35, 0.7]} geometry={pyramidGeo} material={materials.skin} castShadow receiveShadow />
+                    <mesh ref={rightFootRef} position={[26, 26, 68]} rotation={[-0.55, 0.15, -0.1]} scale={[0.8, 1.35, 0.7]} geometry={pyramidGeo} material={materials.skin} castShadow receiveShadow />
                 </group>
 
                 {/* Tail Segments and Spines */}
