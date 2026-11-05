@@ -2,6 +2,8 @@
 
 An interactive 3D web experience built with **React Three Fiber (Three.js)**, **TypeScript**, and **GSAP**, featuring a low-poly procedural Kaiju struggling with sub-zero temperatures and a stuffy snout.
 
+[Live Preview](https://yasirmaxstyle.github.io/coldzilla/)
+
 ---
 
 ## The Legend of Coldzilla (A Tragicomic Tale)
